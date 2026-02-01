@@ -18,3 +18,11 @@ while True:
 
 video.release()
 print(f"{len(frames)} frames")
+
+cellSize = 32
+framelettes = []
+for i in frames:
+    lette = cv2.resize(i, (cellSize, cellSize))
+    framelettes.append(lette)
+
+cv2.imwrite("single.jpg", frames[150])
