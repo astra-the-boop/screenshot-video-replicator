@@ -1,28 +1,19 @@
+import time
+import mss
+import numpy as np
 import cv2
 
-video = cv2.VideoCapture("bad-apple.mp4")
+def capture(dur=10, fps=6):
+    frames = []
+    interval = 1/fps
 
-if not video.isOpened():
-    raise RuntimeError("Could not open video")
+    with mss.mss() as sct:
+        monitor = sct.monitors[1]
+        start = time.time()
+        while time.time() - start < dur:
+            img = sct.grab(monitor)
+            frame = np.array(img)[:,:,:3]
+            frames.append(frame)
+            time.sleep(interval)
 
-frames = []
-count = 0
-
-while True:
-    ret, frame = video.read()
-    if not ret:
-        break
-    if count % 30 == 0:
-        frames.append(frame)
-    count += 1
-
-video.release()
-print(f"{len(frames)} frames")
-
-cellSize = 32
-framelettes = []
-for i in frames:
-    lette = cv2.resize(i, (cellSize, cellSize))
-    framelettes.append(lette)
-
-cv2.imwrite("single.jpg", frames[150])
+    return frames
