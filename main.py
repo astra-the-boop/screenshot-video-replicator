@@ -8,6 +8,8 @@ y = 22
 
 tileNorm = 22
 
+
+
 def loadFrame(path="bad-apple.mp4", t=0.25):
     global frame
     cap = cv2.VideoCapture(path)
@@ -43,6 +45,16 @@ def tileSplit(frame, gx, gy):
             tiles.append(tile)
 
     return tiles, tileWidth, tileHeight
+
+def cropTile(img, w, h):
+    H,W,_ = img.shape
+    if W<w or H<h:
+        return cv2.resize(img, (w,h))
+
+    x = np.random.randint(0, W - w)
+    y = np.random.randint(0, H - h)
+
+    return img[y:y+h, x:x+w]
 
 def normalize(img, size=tileNorm):
     img = cv2.resize(img, (size, size))
@@ -89,7 +101,7 @@ i=0
 for yy in range(y):
     for xx in range(x):
         src = screens[matches[i]]
-        tile = cv2.resize(src, (tileW, tileH))
+        tile = cropTile(src, tileW, tileH)
         out[
             yy*tileH:(yy+1)*tileH,
             xx*tileW:(xx+1)*tileW
