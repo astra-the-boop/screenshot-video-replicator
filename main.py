@@ -55,6 +55,10 @@ def loadRecord(folder):
 
     return imgs
 
+videoFrame = loadFrame("bad-apple.mp4")
+videoTiles, tileW, tileH = tileSplit(videoFrame, x, y)
+videoTilesN = [normalize(t) for t in videoTiles]
+
 screens = loadRecord("screens")
 screenTilesN = [normalize(s) for s in screens]
 
@@ -62,3 +66,28 @@ def distance(a,b):
     return np.mean((a.astype(np.float32) - b.astype(np.float32))**2)
 
 matches = []
+
+for i in videoTilesN:
+    best = None
+    bestDistance = float("inf")
+    for j in screenTilesN:
+        d = distance(i,j)
+        if d<bestDistance:
+            bestDistance = d
+            best = j
+
+out = np.zeros(
+    (y * tileH, x * tileW, 3),dtype=np.uint8
+)
+
+i=0
+for yy in range(y):
+    for xx in range(x):
+        tile = cv2.resize(matches[i], (tileW, tileH))
+        out[
+            yy*tileH:(yy+1)*tileH,
+            xx*tileW:(xx+1)*tileW
+        ] = tile
+        i+=1
+
+cv2.imwrite("mosaic.png", out)
