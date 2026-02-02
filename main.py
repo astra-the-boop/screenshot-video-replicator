@@ -8,8 +8,6 @@ y = 22
 
 tileNorm = 22
 
-
-
 def loadFrame(path="bad-apple.mp4", t=0.25):
     global frame
     cap = cv2.VideoCapture(path)
@@ -46,15 +44,16 @@ def tileSplit(frame, gx, gy):
 
     return tiles, tileWidth, tileHeight
 
-def cropTile(img, w, h):
-    H,W,_ = img.shape
-    if W<w or H<h:
-        return cv2.resize(img, (w,h))
+def cropTile(img, tileX, tileY, gx, gy, w, h):
+    H, W, _ = img.shape
 
-    x = np.random.randint(0, W - w)
-    y = np.random.randint(0, H - h)
+    rx = tileX/gx
+    ry = tileY/gy
 
-    return img[y:y+h, x:x+w]
+    cx = int(rx*(W-w))
+    cy = int(ry*(H-h))
+
+    return img[cy:cy+h, cx:cx+w]
 
 def normalize(img, size=tileNorm):
     img = cv2.resize(img, (size, size))
@@ -76,6 +75,11 @@ videoTilesN = [normalize(t) for t in videoTiles]
 
 screens = loadRecord("screens")
 screenTilesN = [normalize(s) for s in screens]
+
+screenH, screenW, _ = screens[0].shape
+tileW = screenW
+tileH = screenH
+
 
 def distance(a,b):
     return np.mean((a.astype(np.float32) - b.astype(np.float32))**2)
@@ -101,11 +105,10 @@ i=0
 for yy in range(y):
     for xx in range(x):
         src = screens[matches[i]]
-        tile = cropTile(src, tileW, tileH)
         out[
             yy*tileH:(yy+1)*tileH,
             xx*tileW:(xx+1)*tileW
-        ] = tile
+        ] = src
         i+=1
 
 cv2.imwrite("mosaic.png", out)
