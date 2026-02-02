@@ -5,6 +5,9 @@ import cv2
 
 ref="bad-apple.mp4"
 
+cell = 512
+cols = 10
+
 def capture(dur=10, fps=6):
     frames = []
     interval = 1/fps
@@ -42,7 +45,7 @@ def sample(path, count):
     cap.release()
     return frames
 
-def normalize(frame, size=32):
+def normalize(frame, size=cell):
     frame = cv2.resize(frame, (size, size))
     grey = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     edges = cv2.Canny(grey, 50, 160)
@@ -55,16 +58,15 @@ screens = capture(5,2)
 videoTargets = sample(ref, len(screens))
 screensN=[normalize(i) for i in screens]
 targetN = [normalize(i) for i in videoTargets]
-
-
-cell = 32
-cols = 10
 rows = len(screensN)//cols+1
 
 canvas = np.zeros((rows*cell, cols*cell, 3), dtype=np.uint8)
 for i, frames in enumerate(screensN):
     r = i // cols
     c = i % cols
-    canvas[r * cell:(r+1), c * cell:(c + 1) * cell] = frames
+    canvas[
+        r * cell:(r + 1) * cell,
+        c * cell:(c + 1) * cell
+    ] = frames
 
 cv2.imwrite("grid.png", canvas)
