@@ -33,11 +33,11 @@ def tileSplit(frame, gx, gy):
 
     tiles = []
 
-    for y in range(gy):
-        for x in range(gx):
+    for yy in range(gy):
+        for xx in range(gx):
             tile = frame[
-                y*tileHeight:(y+1)*tileWidth,
-                x*tileWidth:(x+1)*tileWidth
+                yy*tileHeight:(yy+1)*tileHeight,
+                xx*tileWidth:(xx+1)*tileWidth
             ]
             tiles.append(tile)
 
@@ -51,7 +51,9 @@ def normalize(img, size=tileNorm):
 def loadRecord(folder):
     imgs = []
     for path in glob.glob(folder + "/*.png"):
-        imgs.append(cv2.imread(path))
+        img = cv2.imread(path)
+        if img is not None:
+            imgs.append(img)
 
     return imgs
 
@@ -68,13 +70,15 @@ def distance(a,b):
 matches = []
 
 for i in videoTilesN:
-    best = None
+    best = -1
     bestDistance = float("inf")
-    for j in screenTilesN:
-        d = distance(i,j)
+
+    for j, k in enumerate(screenTilesN):
+        d = distance(i,k)
         if d<bestDistance:
             bestDistance = d
             best = j
+    matches.append(best)
 
 out = np.zeros(
     (y * tileH, x * tileW, 3),dtype=np.uint8
@@ -83,7 +87,8 @@ out = np.zeros(
 i=0
 for yy in range(y):
     for xx in range(x):
-        tile = cv2.resize(matches[i], (tileW, tileH))
+        src = screens[matches[i]]
+        tile = cv2.resize(src, (tileW, tileH))
         out[
             yy*tileH:(yy+1)*tileH,
             xx*tileW:(xx+1)*tileW
