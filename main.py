@@ -80,15 +80,7 @@ videoTiles, tileW, tileH = tileSplit(videoFrame, x, y)
 videoTilesN = [normalize(t) for t in videoTiles]
 
 screens = loadRecord("screens")
-screenTilesN = []
-screenTilesRaw = []
-
-for s in screens:
-    tiles, _, _ = tileSplit(s, x, y)
-    for t in tiles:
-        screenTilesRaw.append(t)
-        screenTilesN.append(normalize(t))
-
+screenNorms = [normalize(s) for s in screens]
 
 def distance(a, b):
     return np.mean((a.astype(np.float32) - b.astype(np.float32)) ** 2)
@@ -96,18 +88,16 @@ def distance(a, b):
 
 matches = []
 
-tilesInScreen = x * y
-for idx, vtil in enumerate(videoTilesN):
-    tilesPos = idx % tilesInScreen
+for vtil in videoTilesN:
     best = -1
     bestDistance = float("inf")
 
-    for s in range(len(screens)):
-        candidate = screenTilesN[s * tilesInScreen + tilesPos]
-        d = distance(vtil, candidate)
-        if d < bestDistance:
+    for j, sn in enumerate(screenNorms):
+        d = distance(vtil, sn)
+        if d< bestDistance:
             bestDistance = d
-            best = s
+            best = j
+
     matches.append(best)
 
 out = np.zeros(
@@ -117,7 +107,7 @@ out = np.zeros(
 i = 0
 for yy in range(y):
     for xx in range(x):
-        src = screenTilesRaw[matches[i] * tilesInScreen + i]
+        src = screens[matches[i]]
         reSrc = cv2.resize(src, (tileW, tileH), interpolation=cv2.INTER_AREA)
         out[
         yy * tileH:(yy + 1) * tileH,
