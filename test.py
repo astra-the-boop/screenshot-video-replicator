@@ -83,18 +83,13 @@ for s in screens:
         screenTilesRaw.append(t)
         screenTilesN.append(normalize(t))
 
-screenH, screenW, _ = screens[0].shape
-tileW = screenW
-tileH = screenH
-
-
 def distance(a,b):
     return np.mean((a.astype(np.float32) - b.astype(np.float32))**2)
 
 matches = []
 
 tilesInScreen = x*y
-for idx, vtil in enumerate(screenTilesN):
+for idx, vtil in enumerate(videoTilesN):
     tilesPos = idx % tilesInScreen
     best = -1
     bestDistance = float("inf")
@@ -115,10 +110,12 @@ i=0
 for yy in range(y):
     for xx in range(x):
         src = screenTilesRaw[matches[i]*tilesInScreen+i]
+        reSrc = cv2.resize(src, (tileW, tileH), interpolation=cv2.INTER_AREA)
         out[
             yy*tileH:(yy+1)*tileH,
             xx*tileW:(xx+1)*tileW
-        ] = src
+        ] = reSrc
+
         i+=1
 
 print(screens[0].shape)
