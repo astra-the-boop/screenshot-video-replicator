@@ -8,6 +8,7 @@ y = 22
 
 tileNorm = 22
 
+scale = 10
 
 def loadFrame(path="bad-apple.mp4", t=0.25):
     global frame
@@ -101,17 +102,17 @@ for vtil in videoTilesN:
     matches.append(best)
 
 out = np.zeros(
-    (y * tileH, x * tileW, 3), dtype=np.uint8
+    (y * tileH * scale, x * tileW * scale, 3), dtype=np.uint8
 )
 
 i = 0
 for yy in range(y):
     for xx in range(x):
         src = screens[matches[i]]
-        reSrc = cv2.resize(src, (tileW, tileH), interpolation=cv2.INTER_AREA)
+        reSrc = cv2.resize(src, (tileW * scale, tileH * scale), interpolation=cv2.INTER_AREA)
         out[
-        yy * tileH:(yy + 1) * tileH,
-        xx * tileW:(xx + 1) * tileW
+        yy * tileH * scale:(yy + 1) * tileH * scale,
+        xx * tileW * scale:(xx + 1) * tileW * scale
         ] = reSrc
 
         i += 1
