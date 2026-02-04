@@ -10,25 +10,18 @@ tileNorm = 22
 
 scale = 10
 
-def loadFrame(path="bad-apple.mp4", t=0.25):
-    global frame
-    cap = cv2.VideoCapture(path)
-    total = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
-    target = int(total * t)
+print("compiling")
 
-    i = 0
-    f = None
-    while True:
-        ret, f = cap.read()
-        if not ret:
-            break
-        if i == target:
-            frame = f
-            break
-        i += 1
+def loadFrame(path="bad-apple.mp4", frameIndex=10):
+    cap = cv2.VideoCapture(path)
+    cap.set(cv2.CAP_PROP_POS_FRAMES, frameIndex)
+    ret, frame = cap.read()
     cap.release()
+    if not ret:
+        raise RuntimeError("Failed to read frame")
     return frame
 
+frame = loadFrame("bad-apple.mp4", 0)
 
 def tileSplit(frame, gx, gy):
     h, w, _ = frame.shape
@@ -86,6 +79,9 @@ screenNorms = [normalize(s) for s in screens]
 def distance(a, b):
     return np.mean((a.astype(np.float32) - b.astype(np.float32)) ** 2)
 
+
+# def render(path, index, x=40, y=22, scale=10, tileNorm=22):
+#
 
 matches = []
 

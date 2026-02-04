@@ -12,3 +12,4 @@ with mss.mss() as sct:
         mss.tools.to_png(screenshot.rgb, screenshot.size, output=f"screens/{i}.png")
         time.sleep(0.5)
 
+import main
