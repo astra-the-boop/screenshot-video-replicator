@@ -68,7 +68,7 @@ def loadRecord(folder):
 
     return imgs
 
-def render(path, t=0, x=40, y=22, scale=10, tileNorm=22):
+def render(path, exportAs, t=0, x=40, y=22, scale=10, tileNorm=22):
     print("rendering")
     videoFrame = loadFrame("bad-apple.mp4", t)
     videoTiles, tileW, tileH = tileSplit(videoFrame, x, y)
@@ -105,9 +105,15 @@ def render(path, t=0, x=40, y=22, scale=10, tileNorm=22):
 
             i += 1
 
-    cv2.imwrite("mosaic.png", out)
+    cv2.imwrite(f"{exportAs}.png", out)
 
 
 
 def distance(a, b):
     return np.mean((a.astype(np.float32) - b.astype(np.float32)) ** 2)
+
+def getVidLength(path):
+    cap = cv2.VideoCapture(path)
+    fps=cap.get(cv2.CAP_PROP_FPS)
+    frameCount = cap.get(cv2.CAP_PROP_FRAME_COUNT)
+    return frameCount/fps
