@@ -3,23 +3,21 @@ import numpy as np
 import glob
 import os
 
+from requests.packages import target
+
+
 def loadFrame(path="bad-apple.mp4", t=0.25):
     global frame
     cap = cv2.VideoCapture(path)
-    total = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
-    target = int(total * t)
-
-    i = 0
-    f = None
-    while True:
-        ret, f = cap.read()
-        if not ret:
-            break
-        if i == target:
-            frame = f
-            break
-        i += 1
+    if not cap.isOpened():
+        raise RuntimeError("Cannot open video file")
+    fps = cap.get(cv2.CAP_PROP_FPS)
+    target = int(t*fps)
+    cap.set(cv2.CAP_PROP_POS_FRAMES, target)
+    ret, frame = cap.read()
     cap.release()
+    if not ret:
+        raise RuntimeError(f"Cannot read video file at time {t}s")
     return frame
 
 
