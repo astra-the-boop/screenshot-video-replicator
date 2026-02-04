@@ -5,22 +5,19 @@ import main
 import os
 import shutil
 
-t = 30
+def record(t, dir="screens"):
+    try:
+        shutil.rmtree("screens")
+    except OSError as e:
+        print(f"{e.strerror}")
+    print("recording")
+    with mss.mss() as sct:
+        monitor = sct.monitors[1]
+        for i in range(2*t):
+            screenshot = sct.grab(monitor)
+            mss.tools.to_png(screenshot.rgb, screenshot.size, output=f"{dir}/{i}.png")
+            time.sleep(0.5)
 
-try:
-    shutil.rmtree("screens")
-except OSError:
-    print(f"{e.strerror}")
-# print("recording")
-# with mss.mss() as sct:
-#     monitor = sct.monitors[1]
-#     for i in range(2*t):
-#         screenshot = sct.grab(monitor)
-#         mss.tools.to_png(screenshot.rgb, screenshot.size, output=f"screens/{i}.png")
-#         time.sleep(0.5)
-#
-for i in range(int(main.getVidLength("bad-apple.mp4")*10)):
-    # print(i/10)
-    main.render("bad-apple.mp4", f"{i}", t=i/10)
-
-# print(main.getVidLength("bad-apple.mp4"))
+def render(inVid="bad-apple.mp4"):
+    for i in range(int(main.getVidLength(input)*10)):
+        main.render(input, f"{i}", t=i/10)
