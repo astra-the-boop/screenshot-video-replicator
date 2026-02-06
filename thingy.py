@@ -6,7 +6,15 @@ import os
 import shutil
 import moviepy.video.io.ImageSequenceClip
 
-def record(t, dir="screens"):
+def record(t, dir="screens", remove=True):
+    if remove:
+        i = 0
+        while True:
+            try:
+                os.remove(f"{dir}/{i}.png")
+                i+=1
+            except:
+                break
     try:
         shutil.rmtree("screens")
     except OSError as e:
@@ -19,11 +27,20 @@ def record(t, dir="screens"):
             mss.tools.to_png(screenshot.rgb, screenshot.size, output=f"{dir}/{i}.png")
             time.sleep(0.5)
 
-def renderFrames(inVid="bad-apple.mp4", dir="", fps=10):
+def renderFrames(inVid="bad-apple.mp4", fps=10):
+    i = 0
+    while True:
+        try:
+            print("remove")
+            os.remove(f"{i}.png")
+            i+=1
+        except:
+            print("broke")
+            break
     for i in range(int(main.getVidLength(inVid)*fps)):
-        main.render(inVid, f"{dir}{"/" if dir else ""}{i}", t=i/fps)
+        main.render(inVid, f"{i}", t=i/fps)
 
-def render(dir="", fps=10):
+def render(fps=10):
     frames = [int(f[:-4]) for f in os.listdir(".") if os.path.isfile(f) and f.endswith(".png")]
     frames.sort()
     frameName = [str(i)+".png" for i in frames]
@@ -32,4 +49,4 @@ def render(dir="", fps=10):
     clip = moviepy.video.io.ImageSequenceClip.ImageSequenceClip(frameName, fps)
     clip.write_videofile("output.mp4")
 
-render()
+renderFrames()
