@@ -24,10 +24,12 @@ def renderFrames(inVid="bad-apple.mp4", dir="", fps=10):
         main.render(inVid, f"{dir}{"/" if dir else ""}{i}", t=i/fps)
 
 def render(dir="", fps=10):
-    frames = [f for f in os.listdir(".") if os.path.isfile(f) and f.endswith(".png")]
+    frames = [int(f[:-4]) for f in os.listdir(".") if os.path.isfile(f) and f.endswith(".png")]
     frames.sort()
-    # print(frames)
-    clip = moviepy.video.io.ImageSequenceClip.ImageSequenceClip(frames, fps)
-    clip.write_videofile("output.mp4")
+    frameName = [str(i)+".png" for i in frames]
+    print(frameName)
+    print(frames)
+    # clip = moviepy.video.io.ImageSequenceClip.ImageSequenceClip(frames, fps)
+    # clip.write_videofile("output.mp4")
 
 render()
