@@ -34,8 +34,8 @@ def renderFrames(inVid="bad-apple.mp4", fps=10):
             print("remove")
             os.remove(f"{i}.png")
             i+=1
-        except:
-            print("broke")
+        except FileNotFoundError as e:
+            print(e)
             break
     for i in range(int(main.getVidLength(inVid)*fps)):
         main.render(inVid, f"{i}", t=i/fps)
