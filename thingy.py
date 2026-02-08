@@ -40,11 +40,11 @@ def renderFrames(inVid="bad-apple.mp4", fps=10):
     for i in range(int(main.getVidLength(inVid)*fps)):
         main.render(inVid, f"{i}", t=i/fps)
 
-def render(fps=10):
+def render(fps=10, output="output.mp4"):
     frames = [int(f[:-4]) for f in os.listdir(".") if os.path.isfile(f) and f.endswith(".png")]
     frames.sort()
     frameName = [str(i)+".png" for i in frames]
     # print(frameName)
     # print(frames)
     clip = moviepy.video.io.ImageSequenceClip.ImageSequenceClip(frameName, fps)
-    clip.write_videofile("output.mp4")
+    clip.write_videofile(output)

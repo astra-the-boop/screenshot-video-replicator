@@ -81,4 +81,7 @@ def cli():
         thingy.record(args.recordtime, remove=args.nodelprev)
     if not args.norender:
         thingy.renderFrames(args.inputdir, args.fps)
-        thingy.render(args.fps)
+        thingy.render(args.fps, args.outputdir)
+
+if __name__ == "__main__":
+    cli()
