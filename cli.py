@@ -15,8 +15,15 @@ def cli():
     )
 
     parser.add_argument(
+        "--recordtime", "-t",
+        type=int,
+        default=30,
+        help="time recording in seconds",
+    )
+
+    parser.add_argument(
         "--outputdir", "-o",
-        default=".",
+        default="output.mp4",
         help="path to directory of output video",
     )
 
@@ -42,14 +49,36 @@ def cli():
     )
 
     parser.add_argument(
-        "--norecord", "-r",
+        "--norecord", "-rc",
         action="store_false",
-        help="Whether or not to record video frames",
+        help="Whether or not to record video frames (store false)",
     )
 
+    parser.add_argument(
+        "--norender", "-rn",
+        action="store_false",
+        help="Whether or not to render the video (store false)",
+    )
 
+    parser.add_argument(
+        "--nodelprev", "-nd",
+        action="store_false",
+        help="Whether or not to delete previous screenshots (store false)",
+    )
+
+    parser.add_argument(
+        "--fps", "-f",
+        type=int,
+        default=10,
+        help="frames per second"
+    )
 
     args = parser.parse_args()
 
     os.makedirs(args.frames, exist_ok=True)
 
+    if not args.norecord:
+        thingy.record(args.recordtime, remove=args.nodelprev)
+    if not args.norender:
+        thingy.renderFrames(args.inputdir, args.fps)
+        thingy.render(args.fps)

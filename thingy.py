@@ -48,5 +48,3 @@ def render(fps=10):
     # print(frames)
     clip = moviepy.video.io.ImageSequenceClip.ImageSequenceClip(frameName, fps)
     clip.write_videofile("output.mp4")
-
-renderFrames()
