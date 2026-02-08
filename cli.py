@@ -75,8 +75,6 @@ def cli():
 
     args = parser.parse_args()
 
-    os.makedirs(args.frames, exist_ok=True)
-
     if not args.norecord:
         thingy.record(args.recordtime, remove=args.nodelprev)
     if not args.norender:
