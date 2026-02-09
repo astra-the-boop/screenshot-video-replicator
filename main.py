@@ -67,7 +67,6 @@ def loadRecord(folder):
     return imgs
 
 def render(path, exportAs, t=0, x=40, y=22, scale=10, tileNorm=22):
-    print("rendering")
     videoFrame = loadFrame("bad-apple.mp4", t)
     videoTiles, tileW, tileH = tileSplit(videoFrame, x, y)
     videoTilesN = [normalize(t, tileNorm) for t in videoTiles]

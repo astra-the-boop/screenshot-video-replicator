@@ -41,7 +41,7 @@ def renderFrames(inVid="bad-apple.mp4", fps=10):
         except FileNotFoundError as e:
             print(e)
             break
-    for i in range(int(main.getVidLength(inVid)*fps)):
+    for i in tqdm(range(int(main.getVidLength(inVid)*fps)), desc="Rendering frames...", unit=" frames"):
         main.render(inVid, f"{i}", t=i/fps)
 
 def render(fps=10, output="output.mp4"):
