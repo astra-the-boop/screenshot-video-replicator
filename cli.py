@@ -91,7 +91,7 @@ def cli():
         thingy.renderFrames(args.inputdir, args.fps)
     if args.nocomp:
         print("C")
-        thingy.render(args.fps, args.outputdir)
+        thingy.render(args.inputdir, args.fps, args.outputdir)
 
 if __name__ == "__main__":
     cli()

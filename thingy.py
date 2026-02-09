@@ -5,6 +5,7 @@ import main
 import os
 import shutil
 import moviepy.video.io.ImageSequenceClip
+from moviepy.editor import VideoFileClip, ImageSequenceClip
 from tqdm import tqdm
 
 def record(t, dir="screens", remove=True):
@@ -44,9 +45,17 @@ def renderFrames(inVid="bad-apple.mp4", fps=10):
     for i in tqdm(range(int(main.getVidLength(inVid)*fps)), desc="Rendering frames...", unit="frames"):
         main.render(inVid, f"{i}", t=i/fps)
 
-def render(fps=10, output="output.mp4"):
+def render(inputVid, fps=10, output="output.mp4"):
     frames = [int(f[:-4]) for f in os.listdir(".") if os.path.isfile(f) and f.endswith(".png")]
     frames.sort()
     frameName = [str(i)+".png" for i in frames]
-    clip = moviepy.video.io.ImageSequenceClip.ImageSequenceClip(frameName, fps)
-    clip.write_videofile(output)
+    clip = ImageSequenceClip(frameName, fps)
+
+    inputClip = VideoFileClip(inputVid)
+    audio = inputClip.audio.subclip(0, clip.duration)
+
+    clip = clip.set_audio(audio)
+
+    clip.write_videofile(output,codec="libx264",audio_codec="aac",fps=fps)
+    clip.close()
+    inputClip.close()
