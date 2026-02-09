@@ -59,5 +59,3 @@ def render(inputVid, fps=10, output="output.mp4"):
     clip.write_videofile(output,codec="libx264",audio_codec="aac",fps=fps)
     clip.close()
     inputClip.close()
-
-render("bad-apple.mp4")
