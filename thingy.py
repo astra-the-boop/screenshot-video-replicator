@@ -13,7 +13,7 @@ def record(t, dir="screens", remove=True):
             try:
                 os.remove(f"{dir}/{i}.png")
                 i+=1
-            except:
+            except FileNotFoundError:
                 break
     try:
         shutil.rmtree("screens")
@@ -24,7 +24,10 @@ def record(t, dir="screens", remove=True):
         monitor = sct.monitors[1]
         for i in range(2*t):
             screenshot = sct.grab(monitor)
-            mss.tools.to_png(screenshot.rgb, screenshot.size, output=f"{dir}/{i}.png")
+            try:
+                mss.tools.to_png(screenshot.rgb, screenshot.size, output=f"{dir}/{i}.png")
+            except FileNotFoundError:
+                os.mkdir(f"{dir}")
             time.sleep(0.5)
 
 def renderFrames(inVid="bad-apple.mp4", fps=10):
