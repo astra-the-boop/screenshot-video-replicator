@@ -51,18 +51,21 @@ def cli():
     parser.add_argument(
         "--norecord", "-rc",
         action="store_false",
+        default=True,
         help="Whether or not to record video frames (store false)",
     )
 
     parser.add_argument(
         "--norender", "-rn",
         action="store_false",
+        default=True,
         help="Whether or not to render the video (store false)",
     )
 
     parser.add_argument(
         "--nodelprev", "-nd",
         action="store_false",
+        default=True,
         help="Whether or not to delete previous screenshots (store false)",
     )
 
@@ -74,10 +77,11 @@ def cli():
     )
 
     args = parser.parse_args()
-
-    if not args.norecord:
+    if args.norecord:
+        print("A")
         thingy.record(args.recordtime, remove=args.nodelprev)
-    if not args.norender:
+    if args.norender:
+        print("B")
         thingy.renderFrames(args.inputdir, args.fps)
         thingy.render(args.fps, args.outputdir)
 
