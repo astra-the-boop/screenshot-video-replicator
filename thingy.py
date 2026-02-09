@@ -4,8 +4,8 @@ import mss.tools
 import main
 import os
 import shutil
-import moviepy.video.io.ImageSequenceClip
-from moviepy.editor import VideoFileClip, ImageSequenceClip
+from moviepy.video.io.VideoFileClip import VideoFileClip
+from moviepy.video.io.ImageSequenceClip import ImageSequenceClip
 from tqdm import tqdm
 
 def record(t, dir="screens", remove=True):
@@ -52,10 +52,12 @@ def render(inputVid, fps=10, output="output.mp4"):
     clip = ImageSequenceClip(frameName, fps)
 
     inputClip = VideoFileClip(inputVid)
-    audio = inputClip.audio.subclip(0, clip.duration)
+    audio = inputClip.audio.subclipped(0, clip.duration)
 
-    clip = clip.set_audio(audio)
+    clip = clip.with_audio(audio)
 
     clip.write_videofile(output,codec="libx264",audio_codec="aac",fps=fps)
     clip.close()
     inputClip.close()
+
+render("bad-apple.mp4")
