@@ -7,6 +7,13 @@ import shutil
 from moviepy.video.io.VideoFileClip import VideoFileClip
 from moviepy.video.io.ImageSequenceClip import ImageSequenceClip
 from tqdm import tqdm
+from PyInstaller.utils.hooks import copy_metadata
+
+datas = []
+datas += copy_metadata('imageio')
+datas += copy_metadata('imageio-ffmpeg')
+datas += copy_metadata('moviepy')
+datas += copy_metadata('setuptools')
 
 def record(t, dir="screens", remove=True):
     if remove:
