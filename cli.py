@@ -76,6 +76,12 @@ def cli():
         help="frames per second"
     )
 
+    parser.add_argument(
+        "--nocomp", "-nc",
+        action="store_false",
+        help="Whether or not to compose the final video (store false)",
+    )
+
     args = parser.parse_args()
     if args.norecord:
         print("A")
@@ -83,6 +89,8 @@ def cli():
     if args.norender:
         print("B")
         thingy.renderFrames(args.inputdir, args.fps)
+    if args.nocomp:
+        print("C")
         thingy.render(args.fps, args.outputdir)
 
 if __name__ == "__main__":
