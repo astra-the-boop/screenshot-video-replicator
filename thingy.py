@@ -1,3 +1,15 @@
+import importlib.metadata
+
+_real_version = importlib.metadata.version
+
+def _safe_version(name):
+    try:
+        return _real_version(name)
+    except importlib.metadata.PackageNotFoundError:
+        return "0.0.0"
+
+importlib.metadata.version = _safe_version
+
 import mss
 import time
 import mss.tools
