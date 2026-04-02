@@ -3,9 +3,6 @@ import numpy as np
 import glob
 import os
 
-from requests.packages import target
-
-
 def loadFrame(path="bad-apple.mp4", t=0.25):
     global frame
     cap = cv2.VideoCapture(path)
