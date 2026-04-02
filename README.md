@@ -21,6 +21,7 @@ run in terminal:
 |flag|short|default| description                  |
 |----|-----|-------|------------------------------|
 |--inputdir|-i|| path to input video (required)|
+|--outputdir|-o|output.mp4|output path|
 |--recordtime|-t|30| recording duration in secs   |
 |--x|-x|22| number of columns            |
 |--y|-y|10| number of rows|
